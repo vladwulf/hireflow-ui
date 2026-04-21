@@ -6,11 +6,10 @@ export type JobStatus = 'ACTIVE' | 'CLOSED';
 export interface Job {
   id: string;
   title: string;
-  department: string | null;
+  category: string;
   status: JobStatus;
   content: string;
-  notes: string | null;
-  templateId: string;
+  templateId: number;
   createdAt: string;
   updatedAt: string;
 }
