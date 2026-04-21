@@ -4,14 +4,8 @@ import { ArrowLeft, Calendar, ChevronRight, Check, Pencil, Plus, Star, X } from 
 import Markdown from 'react-markdown';
 import { useGetJob } from '../hooks/useGetJob';
 import { useUpdateJob } from '../hooks/useUpdateJob';
-
-const candidates = [
-  { id: '1', name: 'Alice Martin', addedAt: 'Apr 19, 2026', score: 87, status: 'reviewed' },
-  { id: '2', name: 'Bob Chen', addedAt: 'Apr 19, 2026', score: 72, status: 'reviewed' },
-  { id: '3', name: 'Clara Nguyen', addedAt: 'Apr 20, 2026', score: 91, status: 'reviewed' },
-  { id: '4', name: 'David Kim', addedAt: 'Apr 20, 2026', score: null, status: 'pending' },
-  { id: '5', name: 'Eva Rossi', addedAt: 'Apr 21, 2026', score: null, status: 'pending' },
-];
+import { useGetCandidates } from '../hooks/useGetCandidates';
+import CreateCandidateModal from '../components/CreateCandidateModal';
 
 function scoreColor(score: number) {
   if (score >= 85) return 'text-emerald-700 bg-emerald-50';
@@ -26,9 +20,11 @@ export default function JobDetailPage() {
   const [tab, setTab] = useState<Tab>('description');
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
+  const [showAddCandidate, setShowAddCandidate] = useState(false);
 
   const { data: job, isLoading, isError } = useGetJob(uuid!);
   const { mutate: updateJob, isPending: isSaving } = useUpdateJob(uuid!);
+  const { data: candidates = [] } = useGetCandidates(job?.uuid ?? '');
 
   function handleEdit() {
     setDraft(job?.content ?? '');
@@ -90,7 +86,10 @@ export default function JobDetailPage() {
             <span className="flex items-center gap-1"><Calendar size={13} /> {date}</span>
           </div>
         </div>
-        <button className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+        <button
+          onClick={() => setShowAddCandidate(true)}
+          className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+        >
           <Plus size={15} />
           Add Candidate
         </button>
@@ -174,8 +173,8 @@ export default function JobDetailPage() {
               .sort((a, b) => (b.score ?? -1) - (a.score ?? -1))
               .map((candidate) => (
                 <Link
-                  key={candidate.id}
-                  to={`/jobs/${job.uuid}/candidates/${candidate.id}`}
+                  key={candidate.uuid}
+                  to={`/jobs/${job.uuid}/candidates/${candidate.uuid}`}
                   className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-colors group"
                 >
                   <div className="w-8 h-8 rounded-full bg-violet-100 text-violet-700 text-xs font-semibold flex items-center justify-center shrink-0">
@@ -183,7 +182,7 @@ export default function JobDetailPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900">{candidate.name}</p>
-                    <p className="text-xs text-gray-400">Added {candidate.addedAt}</p>
+                    <p className="text-xs text-gray-400">Added {new Date(candidate.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                   </div>
                   <div className="shrink-0">
                     {candidate.score !== null ? (
@@ -201,6 +200,10 @@ export default function JobDetailPage() {
               ))}
           </div>
         </div>
+      )}
+
+      {showAddCandidate && (
+        <CreateCandidateModal jobId={job.uuid} onClose={() => setShowAddCandidate(false)} />
       )}
     </div>
   );
