@@ -6,6 +6,8 @@ export interface Template {
   uuid: string;
   name: string;
   jobDescription: string;
+  category: string;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }
