@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft, Users, Calendar, ChevronRight, Plus, Star } from 'lucide-react';
+import Markdown from 'react-markdown';
 
 const job = {
   id: '1',
@@ -108,8 +109,8 @@ export default function JobDetailPage() {
             <p className="text-xs text-gray-400">Template: <span className="text-gray-600">{job.template}</span></p>
             <button className="text-sm text-violet-600 hover:text-violet-700 font-medium transition-colors">Edit</button>
           </div>
-          <div className="prose prose-sm max-w-none text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
-            {job.description}
+          <div className="prose prose-sm max-w-none">
+            <Markdown>{job.description}</Markdown>
           </div>
         </div>
       )}
