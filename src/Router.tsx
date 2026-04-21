@@ -14,8 +14,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <MainPage /> },
       { path: 'jobs', element: <JobsPage /> },
-      { path: 'jobs/:id', element: <JobDetailPage /> },
-      { path: 'jobs/:id/candidates/:candidateId', element: <CandidateDetailPage /> },
+      { path: 'jobs/:uuid', element: <JobDetailPage /> },
+      { path: 'jobs/:uuid/candidates/:candidateId', element: <CandidateDetailPage /> },
       { path: 'templates', element: <TeamplatesPage /> },
       { path: 'templates/:uuid', element: <TemplateDetailPage /> },
     ],

@@ -22,13 +22,13 @@ function scoreColor(score: number) {
 type Tab = 'description' | 'candidates';
 
 export default function JobDetailPage() {
-  const { id } = useParams<{ id: string }>();
+  const { uuid } = useParams<{ uuid: string }>();
   const [tab, setTab] = useState<Tab>('description');
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
 
-  const { data: job, isLoading, isError } = useGetJob(id!);
-  const { mutate: updateJob, isPending: isSaving } = useUpdateJob(id!);
+  const { data: job, isLoading, isError } = useGetJob(uuid!);
+  const { mutate: updateJob, isPending: isSaving } = useUpdateJob(uuid!);
 
   function handleEdit() {
     setDraft(job?.content ?? '');
@@ -175,7 +175,7 @@ export default function JobDetailPage() {
               .map((candidate) => (
                 <Link
                   key={candidate.id}
-                  to={`/jobs/${job.id}/candidates/${candidate.id}`}
+                  to={`/jobs/${job.uuid}/candidates/${candidate.id}`}
                   className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-colors group"
                 >
                   <div className="w-8 h-8 rounded-full bg-violet-100 text-violet-700 text-xs font-semibold flex items-center justify-center shrink-0">

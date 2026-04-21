@@ -66,7 +66,7 @@ export default function JobsPage() {
           {jobs.map((job) => (
             <JobCard
               key={job.id}
-              id={job.id}
+              uuid={job.uuid}
               title={job.title}
               category={job.category}
               status={job.status}
