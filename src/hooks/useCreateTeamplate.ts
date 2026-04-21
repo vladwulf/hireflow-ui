@@ -3,7 +3,9 @@ import { API_URL } from '../config/env';
 
 export interface CreateTemplateDto {
   name: string;
+  category: string;
   description: string;
+  tags: string[];
 }
 
 async function createTemplate(dto: CreateTemplateDto) {
