@@ -1,4 +1,5 @@
 import { Plus, Search, Users, Calendar, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router';
 
 const jobs = [
   { id: '1', title: 'Senior Frontend Engineer', department: 'Engineering', candidates: 12, date: 'Apr 18, 2026', status: 'active', template: 'Software Engineer' },
@@ -57,9 +58,10 @@ export default function JobsPage() {
 
       <div className="space-y-3">
         {jobs.map((job) => (
-          <div
+          <Link
             key={job.id}
-            className="bg-white rounded-xl border border-gray-200 px-6 py-4 flex items-center gap-6 hover:border-violet-200 hover:shadow-sm transition-all cursor-pointer group"
+            to={`/jobs/${job.id}`}
+            className="bg-white rounded-xl border border-gray-200 px-6 py-4 flex items-center gap-6 hover:border-violet-200 hover:shadow-sm transition-all group"
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-1">
@@ -86,7 +88,7 @@ export default function JobsPage() {
               Template: <span className="text-gray-600">{job.template}</span>
             </div>
             <ChevronRight size={16} className="text-gray-300 group-hover:text-gray-400 shrink-0 transition-colors" />
-          </div>
+          </Link>
         ))}
       </div>
     </div>
