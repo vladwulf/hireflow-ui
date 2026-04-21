@@ -1,13 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import { API_URL } from '../config/env';
 
+export interface CandidateScore {
+  id: number;
+  overall: number;
+  skillsMatch: number;
+  experience: number;
+  cultureFit: number;
+  summary: string;
+  pros: string[];
+  cons: string[];
+  candidateId: number;
+  createdAt: string;
+}
+
 export interface Candidate {
-  id: string;
+  id: number;
   uuid: string;
   name: string;
   createdAt: string;
-  score: number | null;
-  status: 'pending' | 'reviewed';
+  score: CandidateScore | null;
 }
 
 async function fetchCandidates(jobUuid: string): Promise<Candidate[]> {

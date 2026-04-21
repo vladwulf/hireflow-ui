@@ -170,7 +170,7 @@ export default function JobDetailPage() {
           </div>
           <div className="divide-y divide-gray-50">
             {candidates
-              .sort((a, b) => (b.score ?? -1) - (a.score ?? -1))
+              .sort((a, b) => (b.score?.overall ?? -1) - (a.score?.overall ?? -1))
               .map((candidate) => (
                 <Link
                   key={candidate.uuid}
@@ -186,8 +186,8 @@ export default function JobDetailPage() {
                   </div>
                   <div className="shrink-0">
                     {candidate.score !== null ? (
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${scoreColor(candidate.score)}`}>
-                        {candidate.score}%
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${scoreColor(candidate.score.overall)}`}>
+                        {candidate.score.overall}%
                       </span>
                     ) : (
                       <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-400">

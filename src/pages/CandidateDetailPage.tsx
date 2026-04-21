@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
-import { ArrowLeft, CheckCircle, XCircle, Minus, Upload, Check, X } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Minus, Upload, Check, X, Loader2 } from 'lucide-react';
+import { parseCvFile } from '../utils/parseCvFile';
 import { useGetCandidate } from '../hooks/useGetCandidate';
 import { useGetJob } from '../hooks/useGetJob';
 import { useUpdateCandidate } from '../hooks/useUpdateCandidate';
@@ -34,14 +35,20 @@ function CvBox({ content, onSave, isSaving }: CvBoxProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [pasting, setPasting] = useState(false);
   const [draft, setDraft] = useState('');
+  const [isParsing, setIsParsing] = useState(false);
 
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => onSave(ev.target?.result as string);
-    reader.readAsText(file);
     e.target.value = '';
+    setIsParsing(true);
+    try {
+      const text = await parseCvFile(file);
+      setDraft(text);
+      setPasting(true);
+    } finally {
+      setIsParsing(false);
+    }
   }
 
   function handlePasteOpen() {
@@ -71,19 +78,20 @@ function CvBox({ content, onSave, isSaving }: CvBoxProps) {
           <div className="flex items-center gap-2 ml-4 shrink-0">
             <button
               onClick={handlePasteOpen}
-              className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 border border-gray-200 hover:border-gray-300 px-2.5 py-1.5 rounded-lg transition-colors"
+              disabled={isParsing}
+              className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 border border-gray-200 hover:border-gray-300 px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
             >
               Paste text
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              disabled={isSaving}
+              disabled={isSaving || isParsing}
               className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 border border-gray-200 hover:border-gray-300 px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
             >
-              <Upload size={12} />
-              Upload
+              {isParsing ? <Loader2 size={12} className="animate-spin" /> : <Upload size={12} />}
+              {isParsing ? 'Parsing…' : 'Upload'}
             </button>
-            <input ref={fileInputRef} type="file" accept=".txt,.md" className="hidden" onChange={handleFile} />
+            <input ref={fileInputRef} type="file" accept=".pdf,.docx,.txt,.md" className="hidden" onChange={handleFile} />
           </div>
         )}
       </div>
