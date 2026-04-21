@@ -1,18 +1,25 @@
+import { useState } from 'react';
 import { Plus, Search } from 'lucide-react';
 import JobCard from '../components/JobCard';
+import CreateJobModal from '../components/CreateJobModal';
 import { useGetJobList } from '../hooks/useGetJobList';
 
 export default function JobsPage() {
+  const [showModal, setShowModal] = useState(false);
   const { data: jobs, isLoading, isError } = useGetJobList();
 
   return (
+    <>
     <div className="p-8 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Jobs</h1>
           {jobs && <p className="text-sm text-gray-500 mt-1">{jobs.length} job descriptions</p>}
         </div>
-        <button className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+        <button
+          onClick={() => setShowModal(true)}
+          className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+        >
           <Plus size={16} />
           New Job
         </button>
@@ -69,5 +76,8 @@ export default function JobsPage() {
         </div>
       )}
     </div>
+
+    {showModal && <CreateJobModal onClose={() => setShowModal(false)} />}
+    </>
   );
 }
