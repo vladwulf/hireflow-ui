@@ -2,14 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { API_URL } from '../config/env';
 
 export interface Template {
-  id: string;
-  uuid: string;
   name: string;
-  jobDescription: string;
-  category: string;
-  tags: string[];
-  createdAt: string;
-  updatedAt: string;
+	uuid: string;
+	category: string;
+	template: string;
+	tags: string[];
 }
 
 async function fetchTemplates(): Promise<Template[]> {

@@ -73,8 +73,7 @@ export default function TeamplatesPage() {
                 </span>
               </div>
 
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">{template.name}</h3>
-              <p className="text-xs text-gray-500 mb-4 flex-1 line-clamp-3">{template.jobDescription}</p>
+              <h3 className="text-sm py-4 font-semibold text-gray-900 mb-1">{template.name}</h3>
 
               {template.tags.length > 0 && (
                 <div className="mb-4">
