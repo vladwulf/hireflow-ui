@@ -5,6 +5,7 @@ import JobsPage from './pages/JobsPage';
 import JobDetailPage from './pages/JobDetailPage';
 import CandidateDetailPage from './pages/CandidateDetailPage';
 import TeamplatesPage from './pages/TeamplatesPage';
+import TemplateDetailPage from './pages/TemplateDetailPage';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: 'jobs/:id', element: <JobDetailPage /> },
       { path: 'jobs/:id/candidates/:candidateId', element: <CandidateDetailPage /> },
       { path: 'templates', element: <TeamplatesPage /> },
+      { path: 'templates/:uuid', element: <TemplateDetailPage /> },
     ],
   },
 ]);

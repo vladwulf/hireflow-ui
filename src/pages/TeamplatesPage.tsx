@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { Plus, FileText, ChevronRight, Tag, AlertCircle } from 'lucide-react';
 import CreateTemplateModal from '../components/CreateTemplateModal';
 import { useGetTemplates } from '../hooks/useGetTemplates';
@@ -60,9 +61,10 @@ export default function TeamplatesPage() {
       ) : (
         <div className="grid grid-cols-3 gap-4">
           {templates.map((template) => (
-            <div
-              key={template.id}
-              className="bg-white rounded-xl border border-gray-200 p-5 hover:border-violet-200 hover:shadow-sm transition-all cursor-pointer group flex flex-col"
+            <Link
+              key={template.uuid}
+              to={`/templates/${template.uuid}`}
+              className="bg-white rounded-xl border border-gray-200 p-5 hover:border-violet-200 hover:shadow-sm transition-all group flex flex-col"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="w-9 h-9 rounded-lg bg-violet-50 flex items-center justify-center">
@@ -91,12 +93,12 @@ export default function TeamplatesPage() {
                 </div>
               )}
 
-              <div className="flex items-center justify-end pt-4 border-t border-gray-100">
-                <button className="flex items-center gap-1 text-xs text-violet-600 hover:text-violet-700 font-medium transition-colors group-hover:gap-1.5 cursor-pointer">
+              <div className="flex items-center justify-end pt-4 border-t border-gray-100 mt-auto">
+                <span className="flex items-center gap-1 text-xs text-violet-600 font-medium group-hover:gap-1.5 transition-all">
                   Use template <ChevronRight size={12} />
-                </button>
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

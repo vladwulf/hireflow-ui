@@ -3,10 +3,11 @@ import { API_URL } from '../config/env';
 
 export interface Template {
   name: string;
-	uuid: string;
-	category: string;
-	template: string;
-	tags: string[];
+  uuid: string;
+  category: string;
+  description: string;
+  template: string | null;
+  tags: string[];
 }
 
 async function fetchTemplates(): Promise<Template[]> {
