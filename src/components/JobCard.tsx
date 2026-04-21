@@ -8,6 +8,9 @@ const categoryColors: Record<string, string> = {
   Design: 'bg-pink-50 text-pink-700',
   Analytics: 'bg-orange-50 text-orange-700',
   Marketing: 'bg-green-50 text-green-700',
+  Sales: 'bg-yellow-50 text-yellow-700',
+  Legal: 'bg-slate-50 text-slate-700',
+  Support: 'bg-teal-50 text-teal-700',
 };
 
 export interface JobCardProps {

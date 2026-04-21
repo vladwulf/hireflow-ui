@@ -41,6 +41,9 @@ export default function JobsPage() {
           <option>Design</option>
           <option>Analytics</option>
           <option>Marketing</option>
+          <option>Sales</option>
+          <option>Legal</option>
+          <option>Support</option>
         </select>
         <select className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-500">
           <option value="">All statuses</option>

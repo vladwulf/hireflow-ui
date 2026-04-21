@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { useCreateTemplate } from '../hooks/useCreateTeamplate';
 
-const categories = ['Engineering', 'Product', 'Design', 'Analytics', 'Marketing', 'Sales'];
+const categories = ['Engineering', 'Product', 'Design', 'Analytics', 'Marketing', 'Sales', 'Legal', 'Support'];
 
 interface Props {
   onClose: () => void;

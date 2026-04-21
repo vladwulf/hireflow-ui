@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { useCreateJob } from '../hooks/useCreateJob';
 import { useGetTemplates } from '../hooks/useGetTemplates';
 
-const categories = ['Engineering', 'Product', 'Design', 'Analytics', 'Marketing', 'Sales'];
+const categories = ['Engineering', 'Product', 'Design', 'Analytics', 'Marketing', 'Sales', 'Legal', 'Support'];
 
 interface Props {
   onClose: () => void;
