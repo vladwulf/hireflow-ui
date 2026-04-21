@@ -5,8 +5,7 @@ export interface Template {
   name: string;
   uuid: string;
   category: string;
-  description: string;
-  template: string | null;
+  template: string;
   tags: string[];
 }
 

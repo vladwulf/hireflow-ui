@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import Markdown from 'react-markdown';
-import { ArrowLeft, Tag, Sparkles, Pencil, Check, X } from 'lucide-react';
+import { ArrowLeft, Tag, Pencil, Check, X } from 'lucide-react';
 import { useGetTemplate } from '../hooks/useGetTemplate';
 import { useUpdateTemplate } from '../hooks/useUpdateTemplate';
 
@@ -23,7 +23,7 @@ export default function TemplateDetailPage() {
   const [draft, setDraft] = useState('');
 
   function handleEdit() {
-    setDraft(template?.template ?? '');
+    setDraft(template?.template ?? '');  // optional chain: template is undefined while loading
     setEditing(true);
   }
 
@@ -52,11 +52,7 @@ export default function TemplateDetailPage() {
         <div className="animate-pulse flex flex-col gap-4">
           <div className="h-7 w-1/3 bg-gray-100 rounded" />
           <div className="h-4 w-24 bg-gray-100 rounded-full" />
-          <div className="flex items-center gap-2 mt-4 text-sm text-gray-400">
-            <Sparkles size={14} className="shrink-0" />
-            Generating template with AI — this may take a moment on first load…
-          </div>
-          <div className="mt-2 flex flex-col gap-2">
+          <div className="mt-4 flex flex-col gap-2">
             {Array.from({ length: 10 }).map((_, i) => (
               <div key={i} className={`h-3 bg-gray-100 rounded ${i % 3 === 2 ? 'w-2/3' : 'w-full'}`} />
             ))}
@@ -135,11 +131,7 @@ export default function TemplateDetailPage() {
             </div>
           ) : (
             <div className="bg-white border border-gray-200 rounded-xl p-8 prose prose-sm prose-gray max-w-none">
-              {template.template ? (
-                <Markdown>{template.template}</Markdown>
-              ) : (
-                <p className="text-gray-400 text-sm">No template content available.</p>
-              )}
+              <Markdown>{template.template}</Markdown>
             </div>
           )}
         </>
