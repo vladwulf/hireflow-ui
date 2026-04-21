@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import Markdown from 'react-markdown';
-import { ArrowLeft, Tag, Sparkles } from 'lucide-react';
+import { ArrowLeft, Tag, Sparkles, Pencil, Check, X } from 'lucide-react';
 import { useGetTemplate } from '../hooks/useGetTemplate';
+import { useUpdateTemplate } from '../hooks/useUpdateTemplate';
 
 const categoryColors: Record<string, string> = {
   Engineering: 'bg-violet-50 text-violet-700',
@@ -15,6 +17,26 @@ const categoryColors: Record<string, string> = {
 export default function TemplateDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
   const { data: template, isLoading, isError } = useGetTemplate(uuid ?? '');
+  const { mutate: updateTemplate, isPending: isSaving } = useUpdateTemplate(uuid ?? '');
+
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState('');
+
+  function handleEdit() {
+    setDraft(template?.template ?? '');
+    setEditing(true);
+  }
+
+  function handleCancel() {
+    setEditing(false);
+    setDraft('');
+  }
+
+  function handleSave() {
+    updateTemplate(draft, {
+      onSuccess: () => setEditing(false),
+    });
+  }
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -50,13 +72,26 @@ export default function TemplateDetailPage() {
 
       {template && (
         <>
+          {/* Header */}
           <div className="flex items-start justify-between mb-2">
             <h1 className="text-2xl font-semibold text-gray-900">{template.name}</h1>
-            <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColors[template.category] ?? 'bg-gray-100 text-gray-600'}`}>
-              {template.category}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColors[template.category] ?? 'bg-gray-100 text-gray-600'}`}>
+                {template.category}
+              </span>
+              {!editing && (
+                <button
+                  onClick={handleEdit}
+                  className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  <Pencil size={13} />
+                  Edit
+                </button>
+              )}
+            </div>
           </div>
 
+          {/* Tags */}
           {template.tags.length > 0 && (
             <div className="flex items-center gap-2 mb-8">
               <Tag size={13} className="text-gray-400" />
@@ -70,13 +105,43 @@ export default function TemplateDetailPage() {
             </div>
           )}
 
-          <div className="bg-white border border-gray-200 rounded-xl p-8 prose prose-sm prose-gray max-w-none">
-            {template.template ? (
-              <Markdown>{template.template}</Markdown>
-            ) : (
-              <p className="text-gray-400 text-sm">No template content available.</p>
-            )}
-          </div>
+          {/* Content */}
+          {editing ? (
+            <div className="flex flex-col gap-3">
+              <textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                className="w-full min-h-[560px] border border-gray-200 rounded-xl p-6 text-sm text-gray-800 font-mono leading-relaxed resize-y outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                spellCheck={false}
+              />
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                  className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 border border-gray-200 px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  <X size={14} />
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving || draft === template.template}
+                  className="flex items-center gap-1.5 text-sm font-medium bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                  <Check size={14} />
+                  {isSaving ? 'Saving…' : 'Save'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white border border-gray-200 rounded-xl p-8 prose prose-sm prose-gray max-w-none">
+              {template.template ? (
+                <Markdown>{template.template}</Markdown>
+              ) : (
+                <p className="text-gray-400 text-sm">No template content available.</p>
+              )}
+            </div>
+          )}
         </>
       )}
     </div>
