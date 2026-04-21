@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router';
+import { useParams, Link, useNavigate } from 'react-router';
 import Markdown from 'react-markdown';
-import { ArrowLeft, Tag, Pencil, Check, X } from 'lucide-react';
+import { ArrowLeft, Tag, Pencil, Check, X, Trash2 } from 'lucide-react';
 import { useGetTemplate } from '../hooks/useGetTemplate';
 import { useUpdateTemplate } from '../hooks/useUpdateTemplate';
+import { useDeleteTemplate } from '../hooks/useDeleteTemplate';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 
 const categoryColors: Record<string, string> = {
   Engineering: 'bg-violet-50 text-violet-700',
@@ -16,14 +18,17 @@ const categoryColors: Record<string, string> = {
 
 export default function TemplateDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
+  const navigate = useNavigate();
   const { data: template, isLoading, isError } = useGetTemplate(uuid ?? '');
   const { mutate: updateTemplate, isPending: isSaving } = useUpdateTemplate(uuid ?? '');
+  const { mutate: deleteTemplate, isPending: isDeleting } = useDeleteTemplate();
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   function handleEdit() {
-    setDraft(template?.template ?? '');  // optional chain: template is undefined while loading
+    setDraft(template?.template ?? '');
     setEditing(true);
   }
 
@@ -35,6 +40,12 @@ export default function TemplateDetailPage() {
   function handleSave() {
     updateTemplate(draft, {
       onSuccess: () => setEditing(false),
+    });
+  }
+
+  function handleDelete() {
+    deleteTemplate(uuid!, {
+      onSuccess: () => navigate('/templates'),
     });
   }
 
@@ -66,6 +77,15 @@ export default function TemplateDetailPage() {
         </div>
       )}
 
+      {confirmDelete && (
+        <DeleteConfirmModal
+          title={`Delete "${template?.name}"?`}
+          isDeleting={isDeleting}
+          onConfirm={handleDelete}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
+
       {template && (
         <>
           {/* Header */}
@@ -75,14 +95,24 @@ export default function TemplateDetailPage() {
               <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColors[template.category] ?? 'bg-gray-100 text-gray-600'}`}>
                 {template.category}
               </span>
+
               {!editing && (
-                <button
-                  onClick={handleEdit}
-                  className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300 px-3 py-1.5 rounded-lg transition-colors"
-                >
-                  <Pencil size={13} />
-                  Edit
-                </button>
+                <>
+                  <button
+                    onClick={() => setConfirmDelete(true)}
+                    className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-red-600 border border-gray-200 hover:border-red-200 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    <Trash2 size={13} />
+                    Delete
+                  </button>
+                  <button
+                    onClick={handleEdit}
+                    className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    <Pencil size={13} />
+                    Edit
+                  </button>
+                </>
               )}
             </div>
           </div>

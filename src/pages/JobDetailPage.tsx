@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router';
-import { ArrowLeft, Calendar, ChevronRight, Check, Pencil, Plus, Star, X } from 'lucide-react';
+import { Link, useParams, useNavigate } from 'react-router';
+import { ArrowLeft, Calendar, ChevronRight, Check, Pencil, Plus, Star, Trash2, X } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { useGetJob } from '../hooks/useGetJob';
 import { useUpdateJob } from '../hooks/useUpdateJob';
+import { useDeleteJob } from '../hooks/useDeleteJob';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 
 const candidates = [
   { id: '1', name: 'Alice Martin', addedAt: 'Apr 19, 2026', score: 87, status: 'reviewed' },
@@ -23,12 +25,15 @@ type Tab = 'description' | 'candidates';
 
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>('description');
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { data: job, isLoading, isError } = useGetJob(id!);
   const { mutate: updateJob, isPending: isSaving } = useUpdateJob(id!);
+  const { mutate: deleteJob, isPending: isDeleting } = useDeleteJob();
 
   function handleEdit() {
     setDraft(job?.content ?? '');
@@ -38,6 +43,12 @@ export default function JobDetailPage() {
   function handleCancel() {
     setEditing(false);
     setDraft('');
+  }
+
+  function handleDelete() {
+    deleteJob(id!, {
+      onSuccess: () => navigate('/jobs'),
+    });
   }
 
   function handleSave() {
@@ -71,6 +82,14 @@ export default function JobDetailPage() {
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
+      {confirmDelete && (
+        <DeleteConfirmModal
+          title={`Delete "${job.title}"?`}
+          isDeleting={isDeleting}
+          onConfirm={handleDelete}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
       <Link to="/jobs" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors">
         <ArrowLeft size={14} /> Back to Jobs
       </Link>
@@ -90,10 +109,19 @@ export default function JobDetailPage() {
             <span className="flex items-center gap-1"><Calendar size={13} /> {date}</span>
           </div>
         </div>
-        <button className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-          <Plus size={15} />
-          Add Candidate
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-red-600 border border-gray-200 hover:border-red-200 px-3 py-2 rounded-lg transition-colors"
+          >
+            <Trash2 size={13} />
+            Delete
+          </button>
+          <button className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+            <Plus size={15} />
+            Add Candidate
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-1 border-b border-gray-200 mb-6">
