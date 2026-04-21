@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router';
-import { ArrowLeft, Calendar, ChevronRight, Check, Pencil, Plus, Star, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Calendar, ChevronRight, Check, Loader2, Pencil, Plus, Star, Trash2, X } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { useGetJob } from '../hooks/useGetJob';
 import { useUpdateJob } from '../hooks/useUpdateJob';
 import { useDeleteJob } from '../hooks/useDeleteJob';
+import { useToggleJobStatus } from '../hooks/useToggleJobStatus';
 import { useGetCandidates } from '../hooks/useGetCandidates';
 import CreateCandidateModal from '../components/CreateCandidateModal';
 import DeleteConfirmModal from '../components/DeleteConfirmModal';
@@ -29,6 +30,7 @@ export default function JobDetailPage() {
   const { data: job, isLoading, isError } = useGetJob(uuid!);
   const { mutate: updateJob, isPending: isSaving } = useUpdateJob(uuid!);
   const { mutate: deleteJob, isPending: isDeleting } = useDeleteJob();
+  const { mutate: toggleStatus, isPending: isToggling } = useToggleJobStatus(uuid!);
   const { data: candidates = [] } = useGetCandidates(job?.uuid ?? '');
 
   function handleEdit() {
@@ -95,11 +97,32 @@ export default function JobDetailPage() {
         <div>
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-2xl font-semibold text-gray-900">{job.title}</h1>
-            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-              job.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'
-            }`}>
-              {job.status.charAt(0) + job.status.slice(1).toLowerCase()}
-            </span>
+            <button
+              onClick={() => toggleStatus()}
+              disabled={isToggling}
+              title={job.status === 'ACTIVE' ? 'Click to close this job' : 'Click to reactivate this job'}
+              className={`group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all disabled:cursor-not-allowed cursor-pointer ${
+                job.status === 'ACTIVE'
+                  ? 'bg-emerald-50 text-emerald-700 hover:bg-amber-50 hover:text-amber-700'
+                  : 'bg-gray-100 text-gray-500 hover:bg-emerald-50 hover:text-emerald-700'
+              }`}
+            >
+              {isToggling ? (
+                <Loader2 size={10} className="animate-spin" />
+              ) : (
+                <span className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                  job.status === 'ACTIVE'
+                    ? 'bg-emerald-500 group-hover:bg-amber-500'
+                    : 'bg-gray-400 group-hover:bg-emerald-500'
+                }`} />
+              )}
+              <span className="group-hover:hidden">
+                {job.status === 'ACTIVE' ? 'Active' : 'Closed'}
+              </span>
+              <span className="hidden group-hover:inline">
+                {job.status === 'ACTIVE' ? 'Close job' : 'Reactivate'}
+              </span>
+            </button>
           </div>
           <div className="flex items-center gap-4 text-sm text-gray-500">
             <span className="px-2 py-0.5 rounded-md bg-violet-50 text-violet-700 text-xs font-medium">{job.category}</span>
