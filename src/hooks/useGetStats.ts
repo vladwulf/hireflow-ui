@@ -3,6 +3,7 @@ import { API_URL } from '../config/env';
 
 export interface RecentJob {
   id: string;
+  uuid: string;
   title: string;
   category: string;
   status: string;

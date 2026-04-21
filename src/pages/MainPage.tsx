@@ -75,7 +75,7 @@ export default function MainPage() {
                 return (
                   <tr key={job.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                      <Link to={`/jobs/${job.id}`} className="hover:text-violet-600 transition-colors">
+                      <Link to={`/jobs/${job.uuid}`} className="hover:text-violet-600 transition-colors">
                         {job.title}
                       </Link>
                     </td>
