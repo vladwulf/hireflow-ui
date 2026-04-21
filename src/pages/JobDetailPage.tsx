@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
-import { ArrowLeft, Calendar, ChevronRight, Plus, Star } from 'lucide-react';
+import { ArrowLeft, Calendar, ChevronRight, Check, Pencil, Plus, Star, X } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { useGetJob } from '../hooks/useGetJob';
+import { useUpdateJob } from '../hooks/useUpdateJob';
 
 const candidates = [
   { id: '1', name: 'Alice Martin', addedAt: 'Apr 19, 2026', score: 87, status: 'reviewed' },
@@ -23,7 +24,27 @@ type Tab = 'description' | 'candidates';
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [tab, setTab] = useState<Tab>('description');
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState('');
+
   const { data: job, isLoading, isError } = useGetJob(id!);
+  const { mutate: updateJob, isPending: isSaving } = useUpdateJob(id!);
+
+  function handleEdit() {
+    setDraft(job?.content ?? '');
+    setEditing(true);
+  }
+
+  function handleCancel() {
+    setEditing(false);
+    setDraft('');
+  }
+
+  function handleSave() {
+    updateJob(draft, {
+      onSuccess: () => setEditing(false),
+    });
+  }
 
   if (isLoading) {
     return (
@@ -79,7 +100,7 @@ export default function JobDetailPage() {
         {(['description', 'candidates'] as Tab[]).map((t) => (
           <button
             key={t}
-            onClick={() => setTab(t)}
+            onClick={() => { setTab(t); if (editing) handleCancel(); }}
             className={`px-4 py-2 text-sm font-medium capitalize border-b-2 -mb-px transition-colors ${
               tab === t
                 ? 'border-violet-600 text-violet-600'
@@ -92,11 +113,51 @@ export default function JobDetailPage() {
       </div>
 
       {tab === 'description' && (
-        <div className="bg-white rounded-xl border border-gray-200 p-8">
-          <div className="prose prose-sm max-w-none">
-            <Markdown>{job.content}</Markdown>
-          </div>
-        </div>
+        <>
+          {editing ? (
+            <div className="flex flex-col gap-3">
+              <textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                className="w-full min-h-[560px] border border-gray-200 rounded-xl p-6 text-sm text-gray-800 font-mono leading-relaxed resize-y outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                spellCheck={false}
+              />
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                  className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 border border-gray-200 px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  <X size={14} />
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving || draft === job.content}
+                  className="flex items-center gap-1.5 text-sm font-medium bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                  <Check size={14} />
+                  {isSaving ? 'Saving…' : 'Save'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-gray-200 p-8">
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={handleEdit}
+                  className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  <Pencil size={13} />
+                  Edit
+                </button>
+              </div>
+              <div className="prose prose-sm max-w-none">
+                <Markdown>{job.content}</Markdown>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {tab === 'candidates' && (
