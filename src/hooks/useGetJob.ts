@@ -4,6 +4,7 @@ import type { JobStatus } from './useGetJobList';
 
 export interface JobDetail {
   id: string;
+  uuid: string;
   title: string;
   category: string;
   status: JobStatus;

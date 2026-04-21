@@ -5,6 +5,7 @@ export type JobStatus = 'ACTIVE' | 'CLOSED';
 
 export interface Job {
   id: string;
+  uuid: string;
   title: string;
   category: string;
   status: JobStatus;

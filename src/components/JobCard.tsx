@@ -11,19 +11,19 @@ const categoryColors: Record<string, string> = {
 };
 
 export interface JobCardProps {
-  id: string;
+  uuid: string;
   title: string;
   category: string;
   status: JobStatus;
   createdAt: string;
 }
 
-export default function JobCard({ id, title, category, status, createdAt }: JobCardProps) {
+export default function JobCard({ uuid, title, category, status, createdAt }: JobCardProps) {
   const date = new Date(createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
     <Link
-      to={`/jobs/${id}`}
+      to={`/jobs/${uuid}`}
       className="bg-white rounded-xl border border-gray-200 px-6 py-4 flex items-center gap-6 hover:border-violet-200 hover:shadow-sm transition-all group"
     >
       <div className="flex-1 min-w-0">
