@@ -3,9 +3,9 @@ import { API_URL } from '../config/env';
 
 export interface CreateJobDto {
   title: string;
-  templateId: string;
-  department?: string;
-  notes?: string;
+  category: string;
+  content: string;
+  templateUuid: string;
 }
 
 async function createJob(dto: CreateJobDto) {
