@@ -280,8 +280,34 @@ export default function CandidateDetailPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="sm:col-span-2 space-y-6 order-last sm:order-none">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Sidebar — first in DOM so it appears at top on mobile */}
+        <div className="space-y-4 lg:col-start-3 lg:row-start-1">
+          <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
+            <p className="text-xs font-medium text-gray-500 mb-3">Overall Score</p>
+            {score ? (
+              <>
+                <p className={`text-5xl font-bold ${scoreRingColor(score.overall)}`}>{score.overall}</p>
+                <p className="text-xs text-gray-400 mt-1">out of 100</p>
+              </>
+            ) : (
+              <p className="text-sm text-gray-400">Not scored</p>
+            )}
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h2 className="text-sm font-semibold text-gray-900 mb-3">Applied For</h2>
+            <Link
+              to={`/jobs/${jobUuid}`}
+              className="text-sm text-violet-600 hover:text-violet-700 font-medium transition-colors"
+            >
+              {job?.title ?? '—'}
+            </Link>
+          </div>
+        </div>
+
+        {/* Main content — second in DOM, pinned to cols 1-2 on desktop */}
+        <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1 space-y-6">
           {score && (
             <>
               <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -361,30 +387,6 @@ export default function CandidateDetailPage() {
             onSave={(text) => updateCandidate({ extraText: text })}
             isSaving={isUpdating}
           />
-        </div>
-
-        <div className="space-y-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
-            <p className="text-xs font-medium text-gray-500 mb-3">Overall Score</p>
-            {score ? (
-              <>
-                <p className={`text-5xl font-bold ${scoreRingColor(score.overall)}`}>{score.overall}</p>
-                <p className="text-xs text-gray-400 mt-1">out of 100</p>
-              </>
-            ) : (
-              <p className="text-sm text-gray-400">Not scored</p>
-            )}
-          </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Applied For</h2>
-            <Link
-              to={`/jobs/${jobUuid}`}
-              className="text-sm text-violet-600 hover:text-violet-700 font-medium transition-colors"
-            >
-              {job?.title ?? '—'}
-            </Link>
-          </div>
         </div>
       </div>
     </div>
