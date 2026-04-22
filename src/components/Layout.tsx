@@ -85,7 +85,7 @@ export default function Layout() {
           <span className="text-base font-semibold text-violet-600 tracking-tight">HireFlow</span>
         </header>
 
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto pb-10">
           <Outlet />
         </main>
       </div>

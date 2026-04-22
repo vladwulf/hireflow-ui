@@ -78,7 +78,7 @@ export default function JobDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-8 max-w-5xl mx-auto">
         <div className="h-4 w-24 bg-gray-100 rounded animate-pulse mb-6" />
         <div className="h-8 w-64 bg-gray-100 rounded animate-pulse mb-3" />
         <div className="h-4 w-48 bg-gray-100 rounded animate-pulse" />
@@ -88,7 +88,7 @@ export default function JobDetailPage() {
 
   if (isError || !job) {
     return (
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-8 max-w-5xl mx-auto">
         <Link to="/jobs" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors">
           <ArrowLeft size={14} /> Back to Jobs
         </Link>
@@ -100,7 +100,7 @@ export default function JobDetailPage() {
   const date = new Date(job.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto">
       {confirmDelete && (
         <DeleteConfirmModal
           title={`Delete "${job.title}"?`}
@@ -114,9 +114,9 @@ export default function JobDetailPage() {
         <ArrowLeft size={14} /> Back to Jobs
       </Link>
 
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex flex-wrap items-center gap-3 mb-2">
             <h1 className="text-2xl font-semibold text-gray-900">{job.title}</h1>
             <button
               onClick={() => toggleStatus()}
@@ -150,7 +150,7 @@ export default function JobDetailPage() {
             <span className="flex items-center gap-1"><Calendar size={13} /> {date}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setConfirmDelete(true)}
             className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-red-600 border border-gray-200 hover:border-red-200 px-3 py-2 rounded-lg transition-colors"

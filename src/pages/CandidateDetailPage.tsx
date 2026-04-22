@@ -230,7 +230,7 @@ export default function CandidateDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-8 max-w-5xl mx-auto">
         <div className="h-4 w-32 bg-gray-100 rounded animate-pulse mb-6" />
         <div className="h-8 w-48 bg-gray-100 rounded animate-pulse mb-3" />
         <div className="h-4 w-32 bg-gray-100 rounded animate-pulse" />
@@ -240,7 +240,7 @@ export default function CandidateDetailPage() {
 
   if (isError || !candidate) {
     return (
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-8 max-w-5xl mx-auto">
         <Link to={`/jobs/${jobUuid}`} className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors">
           <ArrowLeft size={14} /> Back to Job
         </Link>
@@ -253,7 +253,7 @@ export default function CandidateDetailPage() {
   const addedDate = new Date(candidate.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto">
       <Link
         to={`/jobs/${jobUuid}`}
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors"
@@ -261,7 +261,7 @@ export default function CandidateDetailPage() {
         <ArrowLeft size={14} /> Back to {job?.title ?? 'Job'}
       </Link>
 
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-violet-100 text-violet-700 font-semibold text-lg flex items-center justify-center">
             {candidate.name.split(' ').map((n) => n[0]).join('')}
@@ -280,8 +280,8 @@ export default function CandidateDetailPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="sm:col-span-2 space-y-6">
           {score && (
             <>
               <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -307,7 +307,7 @@ export default function CandidateDetailPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-white rounded-xl border border-gray-200 p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <CheckCircle size={14} className="text-emerald-500" />

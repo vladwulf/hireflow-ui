@@ -13,13 +13,13 @@ export default function MainPage() {
   ];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-6xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
         <p className="text-sm text-gray-500 mt-1">Overview of your recruitment activity</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
         {stats.map(({ label, value, icon: Icon, color, bg }) => (
           <div key={label} className="bg-white rounded-xl border border-gray-200 p-5">
             <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center mb-3`}>
@@ -42,6 +42,7 @@ export default function MainPage() {
             View all <ArrowRight size={12} />
           </Link>
         </div>
+        <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
@@ -97,6 +98,7 @@ export default function MainPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

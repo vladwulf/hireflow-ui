@@ -52,7 +52,7 @@ export default function TemplateDetailPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-4xl mx-auto">
       <Link
         to="/templates"
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors mb-6"
@@ -91,9 +91,9 @@ export default function TemplateDetailPage() {
       {template && (
         <>
           {/* Header */}
-          <div className="flex items-start justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-2">
             <h1 className="text-2xl font-semibold text-gray-900">{template.name}</h1>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColors[template.category] ?? 'bg-gray-100 text-gray-600'}`}>
                 {template.category}
               </span>
