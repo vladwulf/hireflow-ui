@@ -3,7 +3,7 @@ import { API_URL } from '../config/env';
 import type { JobDetail } from './useGetJob';
 
 interface RegenerateJobDto {
-  content: string;
+  content?: string;
   title?: string;
 }
 

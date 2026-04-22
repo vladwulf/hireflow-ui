@@ -56,7 +56,10 @@ export default function JobDetailPage() {
 
   function handleRegenerate() {
     regenerateJob(
-      { content: regenerateNotes, ...(regenerateTitle.trim() ? { title: regenerateTitle.trim() } : {}) },
+      {
+        ...(regenerateNotes.trim() ? { content: regenerateNotes.trim() } : {}),
+        ...(regenerateTitle.trim() ? { title: regenerateTitle.trim() } : {}),
+      },
       {
         onSuccess: () => {
           setShowRegenerate(false);
@@ -299,7 +302,7 @@ export default function JobDetailPage() {
               type="text"
               value={regenerateTitle}
               onChange={(e) => setRegenerateTitle(e.target.value)}
-              placeholder="New job title (optional)"
+              placeholder="New job title (optional, e.g. Senior Frontend Engineer)"
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
             />
             <textarea
@@ -319,7 +322,7 @@ export default function JobDetailPage() {
               </button>
               <button
                 onClick={handleRegenerate}
-                disabled={isRegenerating || !regenerateNotes.trim()}
+                disabled={isRegenerating || (!regenerateNotes.trim() && !regenerateTitle.trim())}
                 className="flex items-center gap-1.5 text-sm font-medium bg-amber-400 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed text-amber-900 px-4 py-2 rounded-lg transition-colors"
               >
                 {isRegenerating ? <Loader2 size={14} className="animate-spin" /> : null}
