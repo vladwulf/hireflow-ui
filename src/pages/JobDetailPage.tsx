@@ -29,6 +29,7 @@ export default function JobDetailPage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showRegenerate, setShowRegenerate] = useState(false);
   const [regenerateNotes, setRegenerateNotes] = useState('');
+  const [regenerateTitle, setRegenerateTitle] = useState('');
 
   const { data: job, isLoading, isError } = useGetJob(uuid!);
   const { mutate: updateJob, isPending: isSaving } = useUpdateJob(uuid!);
@@ -54,12 +55,16 @@ export default function JobDetailPage() {
   }
 
   function handleRegenerate() {
-    regenerateJob(regenerateNotes, {
-      onSuccess: () => {
-        setShowRegenerate(false);
-        setRegenerateNotes('');
+    regenerateJob(
+      { content: regenerateNotes, ...(regenerateTitle.trim() ? { title: regenerateTitle.trim() } : {}) },
+      {
+        onSuccess: () => {
+          setShowRegenerate(false);
+          setRegenerateNotes('');
+          setRegenerateTitle('');
+        },
       },
-    });
+    );
   }
 
   function handleDelete() {
@@ -283,13 +288,20 @@ export default function JobDetailPage() {
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold text-gray-900">Regenerate Job Description</h2>
               <button
-                onClick={() => { setShowRegenerate(false); setRegenerateNotes(''); }}
+                onClick={() => { setShowRegenerate(false); setRegenerateNotes(''); setRegenerateTitle(''); }}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
             <p className="text-sm text-gray-500">Add kickoff notes or guidance for the regenerated job description.</p>
+            <input
+              type="text"
+              value={regenerateTitle}
+              onChange={(e) => setRegenerateTitle(e.target.value)}
+              placeholder="New job title (optional)"
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+            />
             <textarea
               value={regenerateNotes}
               onChange={(e) => setRegenerateNotes(e.target.value)}
@@ -299,7 +311,7 @@ export default function JobDetailPage() {
             />
             <div className="flex items-center justify-end gap-2">
               <button
-                onClick={() => { setShowRegenerate(false); setRegenerateNotes(''); }}
+                onClick={() => { setShowRegenerate(false); setRegenerateNotes(''); setRegenerateTitle(''); }}
                 disabled={isRegenerating}
                 className="text-sm font-medium text-gray-600 hover:text-gray-800 border border-gray-200 px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
               >
