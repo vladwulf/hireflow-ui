@@ -80,11 +80,11 @@ export default function CreateJobModal({ onClose }: Props) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-700">Content</label>
+            <label className="text-sm font-medium text-gray-700">Kick-Off Call Notes</label>
             <textarea
               rows={4}
               required
-              placeholder="Job description content..."
+              placeholder="e.g. We are looking for a senior frontend engineer with 5 years of experience..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none"
