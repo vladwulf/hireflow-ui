@@ -281,7 +281,7 @@ export default function CandidateDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="sm:col-span-2 space-y-6">
+        <div className="sm:col-span-2 space-y-6 order-last sm:order-none">
           {score && (
             <>
               <div className="bg-white rounded-xl border border-gray-200 p-6">
