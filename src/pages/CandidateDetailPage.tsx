@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
-import { Link, useParams } from 'react-router';
-import { ArrowLeft, CheckCircle, XCircle, Minus, Upload, Check, X, Loader2 } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router';
+import { ArrowLeft, CheckCircle, XCircle, Minus, Upload, Check, X, Loader2, Trash2 } from 'lucide-react';
 import { parseCvFile } from '../utils/parseCvFile';
 import { useGetCandidate } from '../hooks/useGetCandidate';
 import { useGetJob } from '../hooks/useGetJob';
 import { useUpdateCandidate } from '../hooks/useUpdateCandidate';
 import { useScoreCandidate } from '../hooks/useScoreCandidate';
+import { useDeleteCandidate } from '../hooks/useDeleteCandidate';
 
 function ScoreBar({ value }: { value: number }) {
   const color = value >= 85 ? 'bg-emerald-500' : value >= 65 ? 'bg-orange-400' : 'bg-red-400';
@@ -222,11 +223,13 @@ function TextBox({ title, description, content, onSave, isSaving }: TextBoxProps
 
 export default function CandidateDetailPage() {
   const { uuid: jobUuid, candidateId } = useParams<{ uuid: string; candidateId: string }>();
+  const navigate = useNavigate();
 
   const { data: candidate, isLoading, isError } = useGetCandidate(candidateId!);
   const { data: job } = useGetJob(jobUuid!);
   const { mutate: updateCandidate, isPending: isUpdating } = useUpdateCandidate(candidateId!);
   const { mutate: scoreCandidate, isPending: isScoring } = useScoreCandidate(candidateId!);
+  const { mutate: deleteCandidate, isPending: isDeleting } = useDeleteCandidate(jobUuid!);
 
   if (isLoading) {
     return (
@@ -271,13 +274,26 @@ export default function CandidateDetailPage() {
             <p className="text-sm text-gray-400 mt-0.5">Added {addedDate}</p>
           </div>
         </div>
-        <button
-          onClick={() => scoreCandidate()}
-          disabled={isScoring}
-          className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-        >
-          {isScoring ? 'Scoring…' : score ? 'Re-score' : 'Score'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => scoreCandidate()}
+            disabled={isScoring}
+            className="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          >
+            {isScoring ? 'Scoring…' : score ? 'Re-score' : 'Score'}
+          </button>
+          <button
+            onClick={() => {
+              if (!confirm(`Delete ${candidate.name}? This cannot be undone.`)) return;
+              deleteCandidate(candidateId!, { onSuccess: () => navigate(`/jobs/${jobUuid}`) });
+            }}
+            disabled={isDeleting}
+            className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50 border border-red-200 hover:border-red-300 text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          >
+            <Trash2 size={14} />
+            {isDeleting ? 'Deleting…' : 'Delete'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
