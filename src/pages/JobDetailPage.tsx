@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, ChevronRight, Check, Loader2, Pencil, Plus, Star, 
 import Markdown from 'react-markdown';
 import { useGetJob } from '../hooks/useGetJob';
 import { useUpdateJob } from '../hooks/useUpdateJob';
+import { useRegenerateJob } from '../hooks/useRegenerateJob';
 import { useDeleteJob } from '../hooks/useDeleteJob';
 import { useToggleJobStatus } from '../hooks/useToggleJobStatus';
 import { useGetCandidates } from '../hooks/useGetCandidates';
@@ -26,9 +27,12 @@ export default function JobDetailPage() {
   const [draft, setDraft] = useState('');
   const [showAddCandidate, setShowAddCandidate] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showRegenerate, setShowRegenerate] = useState(false);
+  const [regenerateNotes, setRegenerateNotes] = useState('');
 
   const { data: job, isLoading, isError } = useGetJob(uuid!);
   const { mutate: updateJob, isPending: isSaving } = useUpdateJob(uuid!);
+  const { mutate: regenerateJob, isPending: isRegenerating } = useRegenerateJob(uuid!);
   const { mutate: deleteJob, isPending: isDeleting } = useDeleteJob();
   const { mutate: toggleStatus, isPending: isToggling } = useToggleJobStatus(uuid!);
   const { data: candidates = [] } = useGetCandidates(job?.uuid ?? '');
@@ -46,6 +50,15 @@ export default function JobDetailPage() {
   function handleSave() {
     updateJob(draft, {
       onSuccess: () => setEditing(false),
+    });
+  }
+
+  function handleRegenerate() {
+    regenerateJob(regenerateNotes, {
+      onSuccess: () => {
+        setShowRegenerate(false);
+        setRegenerateNotes('');
+      },
     });
   }
 
@@ -136,6 +149,12 @@ export default function JobDetailPage() {
           >
             <Trash2 size={13} />
             Delete
+          </button>
+          <button
+            onClick={() => setShowRegenerate(true)}
+            className="flex items-center gap-1.5 text-sm font-medium bg-amber-400 hover:bg-amber-500 text-amber-900 px-3 py-2 rounded-lg transition-colors"
+          >
+            Regenerate JD
           </button>
           <button
             onClick={() => setShowAddCandidate(true)}
@@ -256,6 +275,47 @@ export default function JobDetailPage() {
 
       {showAddCandidate && (
         <CreateCandidateModal jobId={job.uuid} onClose={() => setShowAddCandidate(false)} />
+      )}
+
+      {showRegenerate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-semibold text-gray-900">Regenerate Job Description</h2>
+              <button
+                onClick={() => { setShowRegenerate(false); setRegenerateNotes(''); }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <p className="text-sm text-gray-500">Add kickoff notes or guidance for the regenerated job description.</p>
+            <textarea
+              value={regenerateNotes}
+              onChange={(e) => setRegenerateNotes(e.target.value)}
+              placeholder="e.g. Focus more on leadership skills, add remote-first culture details…"
+              rows={6}
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent resize-y"
+            />
+            <div className="flex items-center justify-end gap-2">
+              <button
+                onClick={() => { setShowRegenerate(false); setRegenerateNotes(''); }}
+                disabled={isRegenerating}
+                className="text-sm font-medium text-gray-600 hover:text-gray-800 border border-gray-200 px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRegenerate}
+                disabled={isRegenerating || !regenerateNotes.trim()}
+                className="flex items-center gap-1.5 text-sm font-medium bg-amber-400 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed text-amber-900 px-4 py-2 rounded-lg transition-colors"
+              >
+                {isRegenerating ? <Loader2 size={14} className="animate-spin" /> : null}
+                {isRegenerating ? 'Regenerating…' : 'Regenerate'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
