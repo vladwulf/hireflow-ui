@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { useCreateCandidate } from '../hooks/useCreateCandidate';
 
 interface Props {
@@ -50,9 +50,10 @@ export default function CreateCandidateModal({ jobId, onClose }: Props) {
             <button
               type="submit"
               disabled={isPending}
-              className="px-4 py-2 text-sm font-medium bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-lg transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-lg transition-colors cursor-pointer"
             >
-              {isPending ? 'Adding...' : 'Add Candidate'}
+              {isPending && <Loader2 size={14} className="animate-spin" />}
+              {isPending ? 'Adding…' : 'Add Candidate'}
             </button>
           </div>
         </form>

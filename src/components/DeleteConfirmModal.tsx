@@ -1,4 +1,4 @@
-import { Trash2, X } from 'lucide-react';
+import { Loader2, Trash2, X } from 'lucide-react';
 
 interface Props {
   title: string;
@@ -42,7 +42,7 @@ export default function DeleteConfirmModal({ title, description, isDeleting, onC
             disabled={isDeleting}
             className="flex-1 flex items-center justify-center gap-1.5 text-sm font-medium bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-4 py-2.5 rounded-xl transition-colors"
           >
-            <Trash2 size={13} />
+            {isDeleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
             {isDeleting ? 'Deleting…' : 'Delete'}
           </button>
         </div>
