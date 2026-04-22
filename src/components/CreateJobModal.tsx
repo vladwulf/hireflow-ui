@@ -87,7 +87,7 @@ export default function CreateJobModal({ onClose }: Props) {
               placeholder="e.g. We are looking for a senior frontend engineer with 5 years of experience..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none"
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-y"
             />
           </div>
 
